@@ -1,17 +1,30 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {reduxForm} from 'redux-form';
 import {createPost} from '../actions/index';
 import  {Link} from 'react-router';
 
 
 class PostsNew extends Component {
+
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
+  onSubmit(props) {
+    this.props.createPost(props)
+      .then( ()=> {
+        //Blog Post created, navigate to index
+        this.context.router.push('/');
+      } );
+  }
+
   render() {
 
     const {fields:{title, categories, content},handleSubmit} = this.props;
     //console.log(title);
 
     return (
-      <form onSubmit= {handleSubmit(this.props.createPost)}>
+      <form onSubmit= {handleSubmit(this.onSubmit.bind(this))}>
         <h3>Create a new form</h3>
 
         <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
